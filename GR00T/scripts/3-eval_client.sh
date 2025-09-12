@@ -1,0 +1,1 @@
+python GR00T/scripts/eval_h1.py

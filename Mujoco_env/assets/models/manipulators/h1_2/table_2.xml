@@ -1,0 +1,16 @@
+<mujoco model="table_square">
+    <asset>
+      <mesh name="half_ring_table" file="half_ring_table.stl" scale=".008 .008 .008"/>
+    </asset>
+    <worldbody>
+        <light castshadow="false" directional='true' diffuse='.3 .3 .3' specular='0.3 0.3 0.3' pos='-3 -3 3' dir='1 1 -1'/>
+        <light castshadow="false" directional='true' diffuse='.3 .3 .3' specular='0.3 0.3 0.3' pos='3 -3 3'  dir='-1 1 -1'/>
+        <light castshadow="false" directional='true' diffuse='.3 .3 .3' specular='0.3 0.3 0.3' pos='0 3 3'   dir='0 -1 -1'/>
+        <body name="half_ring_table" pos="-0.20 1.7 1.0" quat="0 0.707 -0.707 0">
+            <geom type="mesh" mesh="half_ring_table" rgba="0.4 0.4 0.4 1"/>
+        </body>
+        <camera name="angle" pos="0.2 -0.56 2.3" euler="0.35 0 0" fovy="65" target="half_ring_table"/>
+        <camera name="top" pos="1.4 0.0 3.0" euler="0 0.6 1.57"  fovy="30" target="half_ring_table"/>
+    </worldbody>
+  </mujoco>
+  

@@ -1,0 +1,41 @@
+
+# general settings
+ckpt_dir: "ACT/ckpt_models"  
+num_epochs: 20000
+save_every: 1000
+
+temporal_agg: True
+
+policy_class: "ACTTV"
+backbone: 'dino_v2'
+
+seed: 1
+
+# record settings
+dataset_dir: "/DataCollecter/dataset/"     
+num_episodes:     # leave empty here by default
+episode_len:       # leave empty here by default
+camera_names: ['angle','top']  
+xml_dir:          # leave empty here by default
+
+# transformer settings                         
+state_dim: 32            
+action_dim: 32      
+lr_backbone: 0.00001        
+
+enc_layers: 4            
+dec_layers: 7            
+nheads: 8                 
+
+qpos_noise_std: 0
+DT: 0.02
+
+# DO NOT CHANGE IF UNNECESSARY
+lr: 0.00005             
+kl_weight: 10                        
+hidden_dim: 512           
+dim_feedforward: 3200
+chunk_size: 48
+batch_size: 16
+
+
