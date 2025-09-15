@@ -2,7 +2,7 @@
   <img src="media/Title.png" width="500" alt="Unitree H1 Learn">
 </div>
 <div align="center">
-<img src="media/robot_tasks.gif" height="500" alt="robot_tasks">
+<img src="media/robot_tasks.gif" width="500" height="500" alt="robot_tasks">
 </div>
 
 # 创建虚拟环境
