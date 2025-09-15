@@ -1,3 +1,10 @@
+<div align="center">
+  <img src="media/Title.png" width="500" alt="Unitree H1 Learn">
+</div>
+<div align="center">
+<img src="media/robot_tasks.gif" height="150" alt="robot_tasks">
+</div>
+
 # 创建虚拟环境
 ```bash
 conda create -n robot_sim python==3.10.16
@@ -22,7 +29,7 @@ conda install conda-forge::python-orocos-kdl
 
 # 使用方法
 ```bash
-#均在项目文件夹下运行 ~/unitree_h1_env$ xxxxx
+#均在项目文件夹下运行 ~/unitree_h1_learn$ xxxxx
 #export https_proxy="http://127.0.0.1:7897" # 7897是网络代理端口
 #录制数据集
 python3 DataCollecter/h1_record.py
@@ -35,7 +42,7 @@ python3 ACT/demos/h1_act_eval.py --epoch 4000
 
 #GR00T
 #数据处理
-python3 GR00T/Data_transfer/change_hdf5_name.py 
+python3 GR00T/Data_transfer/copy_hdf5.py 
 python3 GR00T/Data_transfer/hd_to_mp4.py 
 python3 GR00T/Data_transfer/hd_to_par.py 
 python3 GR00T/Data_transfer/hd_to_task_json.py
