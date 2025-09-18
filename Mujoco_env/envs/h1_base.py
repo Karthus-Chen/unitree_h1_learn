@@ -41,7 +41,7 @@ class H1_inspireMed(MujocoEnv):
         )
         self.arm_left  = self.robot.left_arm
         self.arm_right = self.robot.right_arm
-        self.troso = self.robot.torso
+        self.torso = self.robot.torso
         self.l_hand1 = self.robot.l_hand1
         self.l_hand2 = self.robot.l_hand2
         self.l_hand3 = self.robot.l_hand3
@@ -122,7 +122,7 @@ class H1_inspireMed(MujocoEnv):
             self.actuate_J(q_target_l, np.zeros(7), self.arm_left)
             self.actuate_J(q_target_r, np.zeros(7), self.arm_right)
 
-            self.actuate_J(np.zeros(1), np.zeros(7), self.troso)
+            self.actuate_J(np.zeros(1), np.zeros(7), self.torso)
             self.actuate_J(np.zeros(4), np.zeros(7), self.l_hand1)
             self.actuate_J(np.zeros(2), np.zeros(7), self.l_hand2)
             self.actuate_J(np.zeros(2), np.zeros(7), self.l_hand3)
@@ -137,7 +137,7 @@ class H1_inspireMed(MujocoEnv):
         elif len(action) > 14:  #手臂+腰+手指控制
             q_target_l = action[:7]
             q_target_r= action[7:14] 
-            q_target_troso= action[14]
+            q_target_torso= action[14]
             q_target_l_hand1= action[15:19]
             q_target_l_hand2= action[19:21]
             q_target_l_hand3= action[21:23]
@@ -151,12 +151,12 @@ class H1_inspireMed(MujocoEnv):
             q_target_r_hand4= action[35:37]
             q_target_r_hand5= action[37:39]
 
-            q_target_troso=np.ones(7)*q_target_troso.copy()
+            q_target_torso=np.ones(7)*q_target_torso.copy()
 
 
             self.actuate_J(q_target_l, np.zeros(7), self.arm_left)
             self.actuate_J(q_target_r, np.zeros(7), self.arm_right)
-            self.actuate_J(q_target_troso, np.zeros(7), self.troso)
+            self.actuate_J(q_target_torso, np.zeros(7), self.torso)
             self.actuate_J(q_target_l_hand1, np.zeros(7), self.l_hand1)
             self.actuate_J(q_target_l_hand2, np.zeros(7), self.l_hand2)
             self.actuate_J(q_target_l_hand3, np.zeros(7), self.l_hand3)
@@ -179,7 +179,7 @@ class H1_inspireMed(MujocoEnv):
     def get_obs_qpos(self):
         qpos_left = np.zeros(self.arm_left.jnt_num)
         qpos_right = np.zeros(self.arm_right.jnt_num)
-        qpos_troso = np.zeros(1)
+        qpos_torso = np.zeros(1)
         qpos_l_hand = np.zeros(1)
         qpos_r_hand = np.zeros(1)
         for i in range(self.arm_left.jnt_num):
@@ -187,10 +187,10 @@ class H1_inspireMed(MujocoEnv):
         for i in range(self.arm_right.jnt_num):
             qpos_right[i] = cp.deepcopy(self.mj_data.joint(self.arm_right.joint_index[i]).qpos[0])
 
-        qpos_troso = cp.deepcopy(self.mj_data.joint(self.troso.joint_index[0]).qpos[0])
+        qpos_torso = cp.deepcopy(self.mj_data.joint(self.torso.joint_index[0]).qpos[0])
         qpos_l_hand=cp.deepcopy(self.mj_data.joint(self.l_hand3.joint_index[0]).qpos[0]/1.7)#因为是simple控制，所以拿一个手指采样
         qpos_r_hand=cp.deepcopy(self.mj_data.joint(self.r_hand3.joint_index[0]).qpos[0]/1.7)
-        return np.hstack([qpos_left,qpos_right,qpos_troso,qpos_l_hand,qpos_r_hand]) #simple obs
+        return np.hstack([qpos_left,qpos_right,qpos_torso,qpos_l_hand,qpos_r_hand]) #simple obs
 
 
     def _get_obs(self):

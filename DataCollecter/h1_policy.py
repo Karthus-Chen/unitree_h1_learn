@@ -19,17 +19,17 @@ class PolicyBase:
         t_frac = (t - curr_waypoint["t"]) / (next_waypoint["t"] - curr_waypoint["t"])
         curr_xyz = np.array(curr_waypoint['xyz'])
         curr_euler = curr_waypoint['euler']
-        curr_troso = curr_waypoint['troso']
+        curr_torso = curr_waypoint['torso']
         curr_hand = curr_waypoint['hand']
         next_xyz = np.array(next_waypoint['xyz'])
         next_euler = next_waypoint['euler']
-        next_troso = next_waypoint['troso']
+        next_torso = next_waypoint['torso']
         next_hand = next_waypoint['hand']
         xyz = curr_xyz + (next_xyz - curr_xyz) * t_frac
         euler = curr_euler + (next_euler - curr_euler) * t_frac
-        troso=curr_troso + (next_troso - curr_troso) * t_frac
+        torso=curr_torso + (next_torso - curr_torso) * t_frac
         hand = curr_hand + (next_hand - curr_hand) * t_frac
-        return xyz, euler,troso, hand
+        return xyz, euler,torso, hand
 
     def predict(self, obj_state, step_count):
 
@@ -44,8 +44,8 @@ class PolicyBase:
                                 0.0, 0.0, 0.0])    
             
             action_hand = np.array([0.0,0.0])
-            action_troso = np.array([0.0])
-            action = np.hstack((action_l,action_r,action_troso,action_hand))
+            action_torso = np.array([0.0])
+            action = np.hstack((action_l,action_r,action_torso,action_hand))
             return action
 
         elif self.step_count >= 1: 
@@ -65,14 +65,14 @@ class PolicyBase:
                 right_xyz = right_xyz + np.random.uniform(-scale, scale, right_xyz.shape)
 
             # interpolate between waypoints to obtain current pose and hand command
-            left_xyz, left_euler, troso, left_hand = self.interpolate(self.curr_left_waypoint, next_left_waypoint, self.step_count)
-            right_xyz, right_euler, troso, right_hand = self.interpolate(self.curr_right_waypoint, next_right_waypoint, self.step_count)
+            left_xyz, left_euler, torso, left_hand = self.interpolate(self.curr_left_waypoint, next_left_waypoint, self.step_count)
+            right_xyz, right_euler, torso, right_hand = self.interpolate(self.curr_right_waypoint, next_right_waypoint, self.step_count)
             action_hand = np.array([left_hand,right_hand])
             action_left = np.concatenate([left_xyz, left_euler])
             action_right = np.concatenate([right_xyz, right_euler])
             self.step_count += 1
-            # print(np.hstack([action_left, action_right, troso, action_hand]))
-            return np.hstack([action_left, action_right, troso, action_hand])#troso只在right中定义有效
+            # print(np.hstack([action_left, action_right, torso, action_hand]))
+            return np.hstack([action_left, action_right, torso, action_hand])#torso只在right中定义有效
 
         
         else:
@@ -107,33 +107,33 @@ class H1Policy(PolicyBase):
             peg_xyz = peg_info[:3] #物体位置
 
             self.left_trajectory = [
-                {"t": 1, "xyz": l_start_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 100, "xyz": l_ready_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 200, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 0},
-                {"t": 230, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 1},
-                {"t": 250, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 1},
-                {"t": 300, "xyz": peg_xyz+np.array([0,0,0.2]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 400, "xyz": l_meetready_xyz, "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 430, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 440, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 460, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 500, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 550, "xyz": l_start_xyz+np.array([-0.1,0,0]), "euler":l_start_euler, "troso": 0, "hand": 0},
-                {"t": 600, "xyz": l_start_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
+                {"t": 1, "xyz": l_start_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 100, "xyz": l_ready_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 200, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 0},
+                {"t": 230, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 1},
+                {"t": 250, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 1},
+                {"t": 300, "xyz": peg_xyz+np.array([0,0,0.2]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 400, "xyz": l_meetready_xyz, "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 430, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 440, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 460, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 500, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 550, "xyz": l_start_xyz+np.array([-0.1,0,0]), "euler":l_start_euler, "torso": 0, "hand": 0},
+                {"t": 600, "xyz": l_start_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
             ]
 
             self.right_trajectory = [
-                {"t": 1, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 100, "xyz": r_ready_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 200, "xyz": r_ready_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 300, "xyz": r_ready_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 400, "xyz": r_meetready_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 440, "xyz": r_meetready_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 460, "xyz": r_meetready_xyz, "euler": r_start_euler, "troso": 0, "hand": 1},
-                {"t": 470, "xyz": r_meetready_xyz, "euler": r_start_euler, "troso": 0, "hand": 1},
-                {"t": 500, "xyz": r_meetready_xyz, "euler": r_start_euler, "troso": 0, "hand": 1},
-                {"t": 550, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 1},
-                {"t": 600, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 1},
+                {"t": 1, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 100, "xyz": r_ready_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 200, "xyz": r_ready_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 300, "xyz": r_ready_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 400, "xyz": r_meetready_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 440, "xyz": r_meetready_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 460, "xyz": r_meetready_xyz, "euler": r_start_euler, "torso": 0, "hand": 1},
+                {"t": 470, "xyz": r_meetready_xyz, "euler": r_start_euler, "torso": 0, "hand": 1},
+                {"t": 500, "xyz": r_meetready_xyz, "euler": r_start_euler, "torso": 0, "hand": 1},
+                {"t": 550, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 1},
+                {"t": 600, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 1},
 
             ]
 
@@ -165,33 +165,33 @@ class H1Policy(PolicyBase):
         #     peg_xyz = peg_info[:3] #物体位置
 
         #     self.left_trajectory = [
-        #         {"t": 1, "xyz": l_start_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
-        #         {"t": 100, "xyz": l_ready_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
-        #         {"t": 200, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 0},
-        #         {"t": 230, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 1},
-        #         {"t": 250, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 1},
-        #         {"t": 300, "xyz": peg_xyz+np.array([0,0,0.2]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-        #         {"t": 400, "xyz": l_meetready_xyz, "euler":l_start_euler, "troso": 0, "hand": 1}, 
-        #         {"t": 430, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-        #         {"t": 440, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-        #         {"t": 460, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 0}, 
-        #         {"t": 500, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 0}, 
-        #         {"t": 550, "xyz": l_start_xyz+np.array([-0.1,0,0]), "euler":l_start_euler, "troso": 0, "hand": 0},
-        #         {"t": 580, "xyz": l_start_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
+        #         {"t": 1, "xyz": l_start_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
+        #         {"t": 100, "xyz": l_ready_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
+        #         {"t": 200, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 0},
+        #         {"t": 230, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 1},
+        #         {"t": 250, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 1},
+        #         {"t": 300, "xyz": peg_xyz+np.array([0,0,0.2]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+        #         {"t": 400, "xyz": l_meetready_xyz, "euler":l_start_euler, "torso": 0, "hand": 1}, 
+        #         {"t": 430, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+        #         {"t": 440, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+        #         {"t": 460, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 0}, 
+        #         {"t": 500, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 0}, 
+        #         {"t": 550, "xyz": l_start_xyz+np.array([-0.1,0,0]), "euler":l_start_euler, "torso": 0, "hand": 0},
+        #         {"t": 580, "xyz": l_start_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
         #     ]
 
         #     self.right_trajectory = [
-        #         {"t": 1, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0}, 
-        #         {"t": 100, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-        #         {"t": 200, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-        #         {"t": 300, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-        #         {"t": 400, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-        #         {"t": 430, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-        #         {"t": 450, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-        #         {"t": 460, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-        #         {"t": 500, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-        #         {"t": 550, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-        #         {"t": 580, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
+        #         {"t": 1, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0}, 
+        #         {"t": 100, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+        #         {"t": 200, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+        #         {"t": 300, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+        #         {"t": 400, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+        #         {"t": 430, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+        #         {"t": 450, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+        #         {"t": 460, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+        #         {"t": 500, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+        #         {"t": 550, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+        #         {"t": 580, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
 
         #     ]
         #demo2
@@ -215,33 +215,33 @@ class H1Policy(PolicyBase):
             peg_xyz = peg_info[:3] #物体位置
 
             self.left_trajectory = [
-                {"t": 1, "xyz": l_start_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 50, "xyz": l_ready_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 150, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 0},
-                {"t": 230, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 1},
-                {"t": 250, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "troso": 0, "hand": 1},
-                {"t": 350, "xyz": peg_xyz+np.array([0,0,0.2]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 400, "xyz": l_meetready_xyz, "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 430, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 440, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 1}, 
-                {"t": 460, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 500, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 520, "xyz": l_start_xyz+np.array([-0.1,0,0]), "euler":l_start_euler, "troso": 0, "hand": 0},
-                {"t": 580, "xyz": l_start_xyz, "euler":l_start_euler, "troso": 0, "hand": 0}, 
+                {"t": 1, "xyz": l_start_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 50, "xyz": l_ready_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 150, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 0},
+                {"t": 230, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 1},
+                {"t": 250, "xyz": peg_xyz+np.array([0,0,0.035]), "euler":l_start_euler, "torso": 0, "hand": 1},
+                {"t": 350, "xyz": peg_xyz+np.array([0,0,0.2]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 400, "xyz": l_meetready_xyz, "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 430, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 440, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 1}, 
+                {"t": 460, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 500, "xyz": l_meetready_xyz+np.array([0,0,-0.08]), "euler":l_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 520, "xyz": l_start_xyz+np.array([-0.1,0,0]), "euler":l_start_euler, "torso": 0, "hand": 0},
+                {"t": 580, "xyz": l_start_xyz, "euler":l_start_euler, "torso": 0, "hand": 0}, 
             ]
 
             self.right_trajectory = [
-                {"t": 1, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0}, 
-                {"t": 100, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 200, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 300, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 400, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-                {"t": 430, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-                {"t": 450, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-                {"t": 460, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-                {"t": 500, "xyz": r_start_xyz, "euler": r_start_euler, "troso": -0.4, "hand": 0},
-                {"t": 550, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
-                {"t": 580, "xyz": r_start_xyz, "euler": r_start_euler, "troso": 0, "hand": 0},
+                {"t": 1, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0}, 
+                {"t": 100, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 200, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 300, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 400, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+                {"t": 430, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+                {"t": 450, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+                {"t": 460, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+                {"t": 500, "xyz": r_start_xyz, "euler": r_start_euler, "torso": -0.4, "hand": 0},
+                {"t": 550, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
+                {"t": 580, "xyz": r_start_xyz, "euler": r_start_euler, "torso": 0, "hand": 0},
 
             ]
 

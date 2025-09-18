@@ -97,7 +97,7 @@ class H1_inspireMed_Pos_Ctrl(H1_inspireMed):
         simple_action=action_jnt.copy()
         action_l=action_jnt[0:7]
         action_r=action_jnt[7:14]
-        action_troso=action_jnt[14]
+        action_torso=action_jnt[14]
         action_l_hand=action_jnt[15]
         action_r_hand=action_jnt[16]
 
@@ -131,7 +131,7 @@ class H1_inspireMed_Pos_Ctrl(H1_inspireMed):
             action_r_hand5[i]=action_r_hand * hand_map_list[10+i]
         
         action = np.hstack((action_l,action_r,
-                            action_troso,
+                            action_torso,
                             action_l_hand1,action_l_hand2,action_l_hand3,action_l_hand4,action_l_hand5,
                             action_r_hand1,action_r_hand2,action_r_hand3,action_r_hand4,action_r_hand5))
         
@@ -244,7 +244,7 @@ if __name__ == "__main__":
                           0.0, 0.0, 0.0])
     right_target=np.array([0.244,  -0.21353,  1.14161,   #左臂目标xyz、rpy  
                           0.0, 0.0, 0.0])
-    action_troso=np.ones(1)*0.0 #腰转动角度
+    action_torso=np.ones(1)*0.0 #腰转动角度
 
     action_l_hand1=np.array([1.3, 0, 0, 0])
     action_l_hand2=np.array([0,0])
@@ -259,7 +259,7 @@ if __name__ == "__main__":
     action_r_hand5=np.array([0,0])
 
     action = np.hstack((action_l,action_r,
-                        action_troso,
+                        action_torso,
                         action_l_hand1,action_l_hand2,action_l_hand3,action_l_hand4,action_l_hand5,
                         action_r_hand1,action_r_hand2,action_r_hand3,action_r_hand4,action_r_hand5)) 
     action_init=action.copy()
@@ -270,7 +270,7 @@ if __name__ == "__main__":
         action_r=env.ik_solve(right_target,env.arm_right,"right")
 
         action = np.hstack((action_l,action_r,
-                            action_troso,
+                            action_torso,
                             action_l_hand1,action_l_hand2,action_l_hand3,action_l_hand4,action_l_hand5,
                             action_r_hand1,action_r_hand2,action_r_hand3,action_r_hand4,action_r_hand5))  
 
