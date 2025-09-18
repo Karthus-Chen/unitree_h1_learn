@@ -8,6 +8,11 @@ MUJOCO_LOG.TXT
 *.swo
 *~
 
+# python
+*.pyc
+*.pyo
+__pycache__
+
 # Data files
 *.so
 dataset/
